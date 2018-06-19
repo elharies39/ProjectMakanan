@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Checking Food</string>
+    <string name="toples_1">Wadah 1</string>
+    <string name="toples_2">Wadah 2</string>
+    <string name="toples_3">Wadah 3</string>
+    <string name="batal">Batal</string>
+    <string name="simpan">Simpan</string>
+    <string name="hapus">Hapus</string>
+    <string name="edit">Edit</string>
+</resources>
