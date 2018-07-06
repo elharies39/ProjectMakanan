@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context="com.appku.elharies.checkingfood.DetailFoodActivity">
+    tools:context="com.appku.elharies.checkingfood.DetailFood1Activity">
 
     <TextView
         android:id="@+id/tv_detail_toples"
@@ -96,5 +96,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_detail_inputData"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/input_makanan"
+        android:background="#017232"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        />
 
 </LinearLayout>

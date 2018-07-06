@@ -1,8 +1,5 @@
 package com.appku.elharies.checkingfood.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
@@ -11,7 +8,7 @@ import java.io.Serializable;
  * Created by El Haries on 6/6/2018.
  */
 @IgnoreExtraProperties
-public class Food implements Serializable, Parcelable {
+public class Food implements Serializable {
     private String namaMakanan;
     private String key;
     private String tglKadaluarsa;
@@ -55,34 +52,4 @@ public class Food implements Serializable, Parcelable {
                 "namaMakanan='" + namaMakanan + '\'' +
                 '}';
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.namaMakanan);
-        dest.writeString(this.key);
-        dest.writeString(this.tglKadaluarsa);
-    }
-
-    protected Food(Parcel in) {
-        this.namaMakanan = in.readString();
-        this.key = in.readString();
-        this.tglKadaluarsa = in.readString();
-    }
-
-    public static final Parcelable.Creator<Food> CREATOR = new Parcelable.Creator<Food>() {
-        @Override
-        public Food createFromParcel(Parcel source) {
-            return new Food(source);
-        }
-
-        @Override
-        public Food[] newArray(int size) {
-            return new Food[size];
-        }
-    };
 }

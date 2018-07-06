@@ -1,18 +1,16 @@
 package com.appku.elharies.checkingfood;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String tglKadaluarsa = null;
     Food makanan;
 
+    @SuppressLint("SimpleDateFormat")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,81 +68,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_toples1:
-                boolean isAda = isExistToples(TOPLES1);
-                Log.d("CEK ADA",": "+isAda);
-                if (isAda) {
-                    databaseReference.child(TOPLES1).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            Food food = dataSnapshot.getValue(Food.class);
-
-                            Log.d("DATA FIREBASE",": "+food.getNamaMakanan());
-                            Log.d("KEY UID DATA",": "+dataSnapshot.getKey());
-
-                            /*f.setKey(dataSnapshot.getKey());
-                            Intent intent = new Intent(MainActivity.this, DetailFoodActivity.class);
-                            intent.putExtra(TOPLES1, (Parcelable) food);
-                            startActivity(intent);*/
-                            Toast.makeText(MainActivity.this, "Ada", Toast.LENGTH_LONG).show();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            System.out.println(databaseError.getDetails()+" "+databaseError.getMessage());
-                        }
-                    });
-                } else {
-                    makanan = new Food();
-
-                    final Dialog dialog = new Dialog(this);
-                    dialog.setContentView(R.layout.dialog_new_toples1);
-                    dialog.setTitle("Dialog");
-                    dialog.show();
-
-                    final TextView tvDialogTanggal = dialog.findViewById(R.id.tv_dialog_tanggal);
-                    final EditText etNamaMakanan = dialog.findViewById(R.id.et_dl_namaMakanan);
-                    Button btnDialogTanggal = dialog.findViewById(R.id.btn_dialog_tanggal);
-                    Button btnDialogSimpan = dialog.findViewById(R.id.btn_dialog_simpan);
-                    Button btnDialogBatal = dialog.findViewById(R.id.btn_dialog_batal);
-
-                    /*makanan.setNamaMakanan(etNamaMakanan.getText().toString());
-                    makanan.setTglKadaluarsa(tglKadaluarsa);*/
-
-                    btnDialogTanggal.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            showDateDialog(tvDialogTanggal);
-                        }
-                    });
-
-                    btnDialogSimpan.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (!isEmpty(etNamaMakanan.getText().toString()) && !isEmpty(tglKadaluarsa)){
-                                dialog.dismiss();
-                                submitDataToples(new Food(etNamaMakanan.getText().toString(), tglKadaluarsa),tvDialogTanggal, TOPLES1);
-                            }else{
-                                Toast.makeText(MainActivity.this, "Data tidak boleh kosong",Toast.LENGTH_LONG).show();
-                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.hideSoftInputFromWindow(tvDialogTanggal.getWindowToken(),0);
-                            }
-
-                        }
-                    });
-
-                    btnDialogBatal.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dialog.dismiss();
-                        }
-                    });
-                }
+                pindahHalamanToples(TOPLES1);
                 break;
             case R.id.btn_toples2:
-
+                pindahHalamanToples(TOPLES2);
                 break;
             case R.id.btn_toples3:
-
+                pindahHalamanToples(TOPLES3);
                 break;
             case R.id.tv_keteranganStatus:
 
@@ -151,7 +82,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public boolean isEmpty(String s){
+    public void pindahHalamanToples(String jenisToples) {
+        Intent intent = new Intent(MainActivity.this, DetailFood1Activity.class);
+        intent.putExtra(jenisToples,jenisToples);
+        startActivity(intent);
+    }
+
+    public boolean isEmpty(String s) {
         return TextUtils.isEmpty(s);
     }
 
@@ -162,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         ada = dataSnapshot.exists();
-                        Log.d("Toples", "Ada isi: " + dataSnapshot.exists());
+                        Log.d("Toples", "Ada isi: " + ada);
                     }
 
                     @Override
@@ -170,16 +107,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         System.out.println(databaseError.getDetails() + " " + databaseError.getMessage());
                     }
                 });
+        Log.d("Toples", "Ada isinya: " + ada);
         return ada;
     }
 
-    public void showDateDialog(final TextView tv){
-       Calendar calendar = Calendar.getInstance();
-       datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-           @Override
-           public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+    public void showDateDialog(final TextView tv) {
+        Calendar calendar = Calendar.getInstance();
+        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                 Calendar newDate = Calendar.getInstance();
-                newDate.set(i,i1,i2);
+                newDate.set(i, i1, i2);
 
                 tv.setText(dateFormat.format(newDate.getTime()));
                 Log.d("Tanggal", dateFormat.format(newDate.getTime()));
@@ -190,15 +128,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("TANGGAL SEKARANG", ": "+tanggal);*/
 
                 tglKadaluarsa = dateFormat.format(newDate.getTime());
-           }
-       }, calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DATE));
+            }
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
 
-       datePickerDialog.show();
+        datePickerDialog.show();
     }
 
-    public void submitDataToples(Food food, final TextView tv, String jenisToples){
+    public void submitDataToples(Food food, final TextView tv, String jenisToples) {
         String keyFirebase = databaseReference.getRef().push().getKey();
-        Log.d("KEY UID", ": "+keyFirebase);
+        Log.d("KEY UID", ": " + keyFirebase);
         databaseReference.child(jenisToples)
                 .push()
                 .setValue(food)
