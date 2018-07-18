@@ -8,4 +8,6 @@
     <string name="hapus">Hapus</string>
     <string name="edit">Edit</string>
     <string name="input_makanan">Input Makanan</string>
+    <string name="masa_3_hari">Masa Kadaluarsa Kurang 3 Hari Lagi</string>
+    <string name="masa_kadaluarsa">Telah Kadaluarsa</string>
 </resources>

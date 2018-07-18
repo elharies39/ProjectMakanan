@@ -4,8 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -107,16 +110,18 @@ public class DetailFood1Activity extends AppCompatActivity {
                         System.out.println(snapshot.getKey());
                         tvNamaMakanan.setText("Nama Makanan: " + food.getNamaMakanan());
                         tvTanggal.setText(food.getTglKadaluarsa());
+
                         nama = food.getNamaMakanan();
                         tanggal = food.getTglKadaluarsa();
-                        System.out.println("KEYNYA: " + food.getKey());
                         kuncinya = food.getKey();
                     }
                     try {
                         sisaHariKadaluarsa = hitungSisaHari(tanggal);
-                        System.out.println("SISA HARI: "+sisaHariKadaluarsa);
+                        System.out.println("SISA HARI: " + sisaHariKadaluarsa);
 
-                        tvSisanya.setText(sisaHariKadaluarsa+" hari lagi");
+
+                        tvSisanya.setText(sisaHariKadaluarsa + " hari lagi");
+
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -381,5 +386,29 @@ public class DetailFood1Activity extends AppCompatActivity {
 
         //long sisaHari = Math.abs(tglKadaluarsa.getTime() - tglSekarang.getTime());
         return TimeUnit.MILLISECONDS.toDays(Math.abs(tglKadaluarsa.getTime() - tglSekarang.getTime()));
+    }
+
+    public void addNotification(String namaMakanan, String isiPemberitahuan, int ikon) {
+        String namaToples = null;
+
+        if (toples.equalsIgnoreCase(MainActivity.TOPLES1)) {
+            namaToples = "TOPLES 1";
+        } else if (toples.equalsIgnoreCase(MainActivity.TOPLES2)) {
+            namaToples = "TOPLES 2";
+        } else if (toples.equalsIgnoreCase(MainActivity.TOPLES3)) {
+            namaToples = "TOPLES 3";
+        }
+
+        NotificationCompat.Builder notification = (NotificationCompat.Builder) new NotificationCompat
+                .Builder(this)
+                .setSmallIcon(ikon)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                        ikon))
+                .setContentTitle(namaToples)
+                .setContentText(namaMakanan + " " + isiPemberitahuan);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat
+                .from(this);
+        notificationManagerCompat.notify(1, notification.build());
     }
 }
